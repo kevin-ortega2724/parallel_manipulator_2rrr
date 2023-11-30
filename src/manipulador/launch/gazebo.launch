@@ -1,0 +1,36 @@
+<launch>
+    <!-- Lanzamiento del mundo vacío de Gazebo -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch" />
+
+    <!-- Publicador de transformaciones estáticas -->
+    <node name="tf_footprint_base"
+          pkg="tf"
+          type="static_transform_publisher"
+          args="0 0 0 0 0 0 base_link base_footprint 40" />
+
+    <!-- Lanzamiento del modelo del robot en Gazebo -->
+    <node name="spawn_model"
+          pkg="gazebo_ros"
+          type="spawn_model"
+          args="-file $(find manipulador)/urdf/manipulador.urdf -urdf -model manipulador"
+          output="screen" />
+
+    <!-- Publicación de joint calibration (si es necesario) -->
+    <node name="fake_joint_calibration"
+          pkg="rostopic"
+          type="rostopic"
+          args="pub /calibrated std_msgs/Bool true" />
+
+    <!-- Cargar la configuración del controlador desde el archivo YAML -->
+    <rosparam file="$(find manipulador)/config/joint_names_manipulador.yaml" command="load"/>
+
+    <!-- Lanzamiento del controlador -->
+    <node name="controller_spawner"
+          pkg="controller_manager"
+          type="spawner"
+          respawn="false"
+          output="screen"
+          args="position_controller velocity_controller" />
+
+</launch>
+

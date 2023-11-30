@@ -1,0 +1,8 @@
+prefix=/home/ko/ws1_mp1/devel
+
+Name: manipulador
+Description: Description of manipulador
+Version: 1.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
